@@ -1,58 +1,79 @@
-# XML 公文書ツールセット
+# XML to HTML変換ツール
 
-XML/XSL 形式の公文書を扱うためのツールです。  
-以下の 2 つのアプリケーションがあります。
+XMLファイルをXSLTスタイルシートを使用してHTMLに変換するツールです。
 
-- **xml2html.exe**  
-  XML または ZIP を HTML に変換するツール  
-- **xml2htmlviewer.exe**  
-  XML または ZIP をブラウザで閲覧するビューア
+## 機能
 
-どちらもドラッグ＆ドロップで動作します。
+- 単一XMLファイルのHTML変換
+- ZIPアーカイブ内のXMLファイル一括変換
+- GUIビューアによるブラウザ表示
+- oshiraseクラスの折り返し対応
 
----
+## ファイル構成
 
-## xml2html（変換ツール）
+```
+xml2html/
+├── xml2html.py              # コマンドライン変換ツール
+├── xml2htmlviewer.py        # GUIビューア
+├── xml2html_common.py       # 共通モジュール
+├── config.py                # 設定ファイル
+└── README.md               # このファイル
+```
 
-### 機能
-- XML を HTML に変換
-- ZIP を展開し、内部の XML を一括変換
-- XML 内の `xml-stylesheet` から XSL を自動検出
-- 出力 HTML は入力ファイルと同じフォルダに生成
+## 使用方法
 
-### 使い方
-1. `xml2html.exe` に XML または ZIP をドラッグ＆ドロップします  
-2. 同じフォルダに HTML が生成されます
+### コマンドラインツール
 
----
+```bash
+# 単一XMLファイルを変換
+python xml2html.py input.xml
 
-## xml2htmlviewer（ビューア）
+# ZIPファイル内のXMLを一括変換
+python xml2html.py archive.zip
 
-### 機能
-- XML を変換してブラウザで表示
-- HTML はOSの一時フォルダに作成
-- ZIP 内に複数 XML がある場合は選択ダイアログを表示
-- ダブルクリックで開く簡易ビューア
-- ESC キーでダイアログを閉じる
+# 複数ファイルを一度に処理
+python xml2html.py file1.xml file2.xml archive.zip
+```
 
-### 使い方
-1. `xml2htmlviewer.exe` に XML または ZIP をドラッグ＆ドロップします  
-2. 既定ブラウザで整形された HTML が表示されます  
-3. ZIP の場合、XML を選択するダイアログが表示されます
+### GUIビューア
 
----
+```bash
+# XMLファイルをブラウザで表示
+python xml2htmlviewer.py input.xml
 
-## 対応形式
-- XML（XSLT1.0）
-- ZIP（内部に XML/XSL を含むもの）
+# ZIPファイル内のXMLを選択して表示
+python xml2htmlviewer.py archive.zip
+```
 
----
+## 設定
 
-## 動作環境
-- Windows 10 / 11  
-- Python 3.14 で開発し、PyInstaller により単一 exe 化
+`config.py`で以下の設定が可能です：
 
----
+- エンコーディング
+- サポートするファイル拡張子
+- GUIウィンドウ設定
+- ロギングレベル
+
+## 依存ライブラリ
+
+- lxml
+- tkinter (GUIビューアのみ)
+
+## インストール
+
+```bash
+pip install lxml
+```
+
+## 変換処理の仕組み
+
+1. XMLファイルから`xml-stylesheet`処理命令を解析
+2. XSLTスタイルシートを検索・読み込み
+3. lxmlを使用してXMLをHTMLに変換
+4. oshiraseクラスのpreタグをdivタグに変換
+5. 折り返し用CSSをheadタグ内に挿入
+6. HTMLファイルとして出力
 
 ## ライセンス
-自由に利用・改変できます。
+
+このツールは公文書のHTML変換を目的として開発されました。
